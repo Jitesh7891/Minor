@@ -1,0 +1,133 @@
+K-Means Clustering: Overview
+K-Means clustering is an unsupervised machine learning algorithm used for partitioning data into 
+𝐾
+K clusters. It minimizes intra-cluster variance, grouping similar data points together.
+
+Why Use K-Means?
+Scalability – Works well with large datasets.
+Simplicity – Easy to understand and implement.
+Versatility – Can be applied to various domains like image segmentation, anomaly detection, and recommender systems.
+Effectiveness
+K-Means is effective for well-separated clusters but struggles with complex, overlapping data.
+Works well when the number of clusters (
+𝐾
+K) is chosen appropriately.
+Sensitive to the initial centroid selection.
+Advantages
+✔ Fast and efficient on large datasets.
+✔ Works well for low-dimensional structured data.
+✔ Easy to interpret and visualize.
+
+Disadvantages
+✖ Struggles with non-spherical clusters.
+✖ Requires pre-specification of 
+𝐾
+K.
+✖ Sensitive to outliers and initial centroids.
+
+How is K-Means Calculated?
+Choose 
+𝐾
+K cluster centers randomly.
+Assign each data point to the nearest cluster center.
+Compute the new centroids as the mean of the assigned points.
+Repeat steps 2 and 3 until convergence (centroids no longer change).
+
+1️⃣ What is K-Means Clustering?
+K-Means is an unsupervised machine learning algorithm used to group similar items into clusters.
+It is useful for finding patterns in data, like grouping similar users based on their movie preferences.
+
+How It Works
+We randomly select K cluster centers.
+Each data point is assigned to the nearest cluster.
+The cluster centers are updated as the average of all points in that cluster.
+Steps 2 and 3 are repeated until the clusters stop changing.
+2️⃣ Why Do We Use K from 2 to 11?
+The value of K (the number of clusters) is not known in advance.
+We try different values (e.g., from 2 to 11) and use mathematical methods to determine the best K.
+
+Minimum K = 2 → At least two groups are needed for clustering.
+Maximum K = 10 or 11 → Too many clusters might make the model too complex.
+We decide the best K using:
+✅ Elbow Method (Inertia)
+✅ Silhouette Score
+
+3️⃣ What is the Elbow Method?
+The Elbow Method helps find the best K by checking how well the data is grouped.
+
+Concept
+Inertia (Within-Cluster Sum of Squares - WCSS) measures how tightly the points are grouped inside a cluster.
+If K increases, inertia decreases, because more clusters mean each cluster has fewer points.
+Graph Example (Elbow Plot)
+yaml
+Copy
+Edit
+K (Clusters)     Inertia (WCSS)
+---------------------------------
+2                10000
+3                7000
+4                5000  <-- ELBOW POINT (best K)
+5                4000
+6                3500
+...
+📌 Observation:
+
+When K = 4, the drop in inertia is significant.
+After K = 4, the reduction slows down (elbow shape).
+The best K is where the drop in inertia slows down (the "elbow" point).
+Elbow Method Visualization
+
+📌 Best K is where the "elbow" appears.
+
+4️⃣ What is the Silhouette Score?
+The Silhouette Score measures how well-separated clusters are.
+It checks if a point is closer to its own cluster than other clusters.
+
+Formula
+𝑆
+=
+𝑏
+−
+𝑎
+max
+⁡
+(
+𝑎
+,
+𝑏
+)
+S= 
+max(a,b)
+b−a
+​
+ 
+a = Average distance between a point and other points in its cluster.
+b = Average distance between a point and points in the nearest other cluster.
+Range
+S ≈ 1 → Well-clustered.
+S ≈ 0 → Overlapping clusters.
+S ≈ -1 → Wrong clustering.
+Example
+Point	Cluster	a (intra-cluster distance)	b (nearest other cluster distance)	Silhouette Score
+A	1	2.0	5.0	0.6
+B	1	2.5	6.0	0.58
+📌 Higher Silhouette Score = Better clustering.
+
+5️⃣ How Does This Work in Movie Recommendation?
+Prepare Data
+
+Convert movie ratings into a User-Movie matrix.
+Normalize the data for better clustering.
+Find the Best K
+
+Run K-Means with K = 2 to 11.
+Calculate Elbow Method (Inertia) & Silhouette Score.
+Select K where the silhouette score is highest.
+Cluster Users
+
+Each user is assigned a cluster based on similar ratings.
+Recommend Movies
+
+Find users in the same cluster as the target user.
+Compute average ratings for movies within the cluster.
+Recommend the top N movies that have the highest ratings.
