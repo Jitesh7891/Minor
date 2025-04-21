@@ -1,0 +1,70 @@
+User Attributes:
+In this code, the user attributes we take into account are:
+
+Age: The user's age.
+
+Gender: The user's gender.
+
+Occupation: The user's occupation.
+
+These attributes are encoded using OneHotEncoding to convert the categorical variables into numerical representations. This encoding helps the model capture the relationships between users and their attributes in a way that can be used for making personalized recommendations.
+
+High-Level Movie Recommendation Process:
+At a high level, the movie recommendation works as follows:
+
+Matrix Factorization:
+
+The core idea is that we decompose the user-item interaction matrix (ratings matrix R) into two smaller matrices:
+
+User matrix (U): Represents the latent features for users.
+
+Item matrix (V): Represents the latent features for movies (items).
+
+The dot product between the corresponding user vector (from U) and movie vector (from V) gives the predicted rating for a user-item pair.
+
+Attribute Fusion:
+
+In addition to the user-item interaction matrix, we incorporate user attributes (like age, gender, occupation) and item attributes (like movie genre, release date, etc.).
+
+These attributes help improve the prediction by providing more contextual information about the users and items.
+
+The model updates user attribute matrix (A) and item attribute matrix (B) during training by minimizing the error between the dot product of latent factors and the user/item attributes.
+
+Training:
+
+The model uses Stochastic Gradient Descent (SGD) to adjust the user and item latent factors in the matrices U and V based on observed ratings. This is done over multiple epochs.
+
+Additionally, the user and item attribute matrices (A and B) are adjusted based on the user-item latent factor matrix (U and V).
+
+Movie Recommendation:
+
+After training, we get a full prediction matrix (preds) that gives the predicted ratings for all user-item pairs (movies for each user).
+
+For a given user, the system predicts how much the user would like each movie (based on their historical ratings and the learned latent factors).
+
+The recommendation function (recommend_movies) selects the top N movies (those that the user has not rated yet) based on the predicted ratings.
+
+The top recommended movies are then returned, which are the movies with the highest predicted ratings.
+
+Final Recommendation:
+
+The function returns the indices and titles of the recommended movies for a specific user based on their preferences, learned latent factors, and personal attributes.
+
+High-Level Flow:
+Data Input:
+
+Load the ratings matrix (R), user attributes (U_attr), and item attributes (V_attr).
+
+Training the Model:
+
+Train the AttributeFusedSVD model using the ratings and attributes.
+
+Movie Prediction:
+
+The model predicts ratings for all user-item pairs using the learned latent factors.
+
+Recommendation:
+
+For a specific user, the model predicts ratings for movies the user hasn't rated yet and recommends the top ones.
+
+Thus, the movie recommendation is personalized by considering both the user’s historical ratings (matrix factorization) and additional user and item attributes (attribute fusion). This allows the model to make more informed recommendations, taking into account the user's demographic and contextual data.
