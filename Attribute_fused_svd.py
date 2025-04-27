@@ -14,6 +14,7 @@ class AttributeFusedSVD:
         self.beta = beta
 
     def fit(self, ratings, user_attrs, item_attrs):
+        np.random.seed(42)
         n_users, n_items = ratings.shape
         self.U = np.random.normal(scale=0.1, size=(n_users, self.n_factors))
         self.V = np.random.normal(scale=0.1, size=(n_items, self.n_factors))

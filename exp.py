@@ -10,6 +10,7 @@ class AttributeFusedSVD:
         self.n_epochs, self.alpha, self.beta = n_epochs, alpha, beta
 
     def fit(self, R, U_attr, I_attr):
+        np.random.seed(42)
         n_u, n_i = R.shape
         self.U = np.random.normal(scale=0.1, size=(n_u, self.n_factors))
         self.V = np.random.normal(scale=0.1, size=(n_i, self.n_factors))
