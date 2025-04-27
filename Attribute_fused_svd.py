@@ -64,7 +64,7 @@ def hyperparameter_tuning(R, user_attrs, item_attrs):
     param_grid = {
         'n_factors': [10, 20, 30],
         'lr': [0.001, 0.005, 0.01],
-        'reg': [0.02, 0.1],
+        'reg': [0.02, 0.05, 0.1],
         'n_epochs': [10, 20, 50],
     }
     
