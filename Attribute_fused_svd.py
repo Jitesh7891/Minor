@@ -96,7 +96,7 @@ def get_top_n_recommendations(predictions, R, n=5):
     return top_n_recommendations
 
 def print_recommendations(top_n_recommendations, u_item, user_idx=0):
-    print(f"Top 5 Recommendations for User {user_idx + 1}:")
+    print(f"Top 5 Recommendations for User {user_idx}:")
     for item_idx in top_n_recommendations[user_idx]:
         movie_title = u_item.iloc[item_idx]['title']
         print(f"- {movie_title}")
@@ -121,5 +121,5 @@ if __name__ == '__main__':
     # Load item data (movie titles)
     u_item = pd.read_csv('d:/Minor/ml-100k/ml-100k/u.item', sep='|', names=['item', 'title', 'release', 'video', 'imdb'] + list(range(19)), encoding='latin-1')
 
-    # Print top 5 recommendations for User 1
-    print_recommendations(top_n_recommendations, u_item, user_idx=208)  # Example for user 1
+    # Print top 5 recommendations for User 
+    print_recommendations(top_n_recommendations, u_item, user_idx=208)  
