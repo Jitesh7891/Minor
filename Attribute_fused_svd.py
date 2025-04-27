@@ -122,4 +122,4 @@ if __name__ == '__main__':
     u_item = pd.read_csv('d:/Minor/ml-100k/ml-100k/u.item', sep='|', names=['item', 'title', 'release', 'video', 'imdb'] + list(range(19)), encoding='latin-1')
 
     # Print top 5 recommendations for User 1
-    print_recommendations(top_n_recommendations, u_item, user_idx=0)  # Example for user 1
+    print_recommendations(top_n_recommendations, u_item, user_idx=208)  # Example for user 1

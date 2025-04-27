@@ -1,0 +1,28 @@
+We applied PCA to the user-genre profile matrix, which represents how much each user prefers different genres.
+
+Data Preparation (User-Genre Profile)
+
+We first created a user-genre profile, where each user has a row, and each column represents their average rating for a specific genre.
+This means each user is represented in a high-dimensional space (one dimension per genre).
+Standardization
+
+Since PCA is sensitive to scale, we standardized the data using StandardScaler().
+Standardization ensures all features (genres) have a mean of 0 and a standard deviation of 1, preventing any genre from dominating the analysis.
+Applying PCA (Dimensionality Reduction)
+
+We applied PCA to reduce the high-dimensional genre space into just two principal components (PC1 and PC2).
+These two components capture the most significant patterns in user preferences, reducing noise and redundancy.
+Projecting Users into PCA Space
+
+Each user is now represented as a point in 2D space (PC1, PC2).
+This allows us to visualize and compare users based on their overall genre preferences rather than individual genre ratings.
+Finding Similar Users Using Euclidean Distance
+
+We calculated Euclidean distances between users in this new PCA space.
+The smaller the distance, the more similar their genre preferences are.
+For each selected user, we found their top 5 nearest users (most similar in movie taste).
+Generating Recommendations
+
+We collected movie ratings from these similar users.
+We excluded movies the target user has already rated.
+We recommended the top 5 highest-rated movies from the similar users' ratings.

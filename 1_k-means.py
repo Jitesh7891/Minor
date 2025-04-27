@@ -80,7 +80,8 @@ print("Users per cluster:")
 print(cluster_counts)
 
 # Select 5 random users for recommendations
-random_users = np.random.choice(user_genre_profile.index, 5, replace=False)
+# random_users = np.random.choice(user_genre_profile.index, 5, replace=False)
+random_users=[1,2,3,4,5]
 print("Selected Users for Recommendation:", random_users)
 
 # Provide top 5 movie recommendations per user based on their cluster

@@ -1,0 +1,21 @@
+Explanation of the Hybrid Approach
+User-Genre Profile (Hybrid Input):
+We use a user–genre profile that aggregates the ratings a user gives to movies weighted by the movie’s genre. This matrix is a blend of collaborative information (ratings) and content information (movie genres).
+
+Dimensionality Reduction via PCA:
+PCA is applied to the standardized user–genre profiles to map each user into a 2D space. Similarity between users is then computed using Euclidean distance in this space.
+
+Finding Similar Users:
+For each target user, we identify the top 5 nearest neighbors (users with similar PCA coordinates).
+
+Collaborative Filtering Component:
+We aggregate the ratings from these similar users to calculate an average rating for each candidate movie (i.e., movies the target user hasn’t seen).
+
+Content-Based Filtering Component:
+For each candidate movie, we compute the cosine similarity between the target user’s genre preference vector (from the user–genre profile) and the movie’s own one-hot encoded genre vector.
+
+Combining Signals – The Hybrid Score:
+The hybrid score is calculated by multiplying the collaborative score (average rating from similar users) with the content similarity. This favors movies that are both highly rated by similar users and closely match the user’s content preferences.
+
+Final Recommendations:
+Candidate movies are ranked by their hybrid scores, and the top 5 are recommended.
