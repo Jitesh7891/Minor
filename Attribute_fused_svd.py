@@ -119,8 +119,19 @@ if __name__ == '__main__':
     # Get top N recommendations for each user
     top_n_recommendations = get_top_n_recommendations(predictions, R, n=5)
 
+
+
     # Load item data (movie titles)
     u_item = pd.read_csv('d:/Minor/ml-100k/ml-100k/u.item', sep='|', names=['item', 'title', 'release', 'video', 'imdb'] + list(range(19)), encoding='latin-1')
+
+    # Save top 5 recommendations for first 50 users to a text file
+    with open("top_50_recommendations.txt", "w", encoding="utf-8") as f:
+        for user_idx in range(300):
+            f.write(f"Top 5 Recommendations for User {user_idx}:\n")
+            for item_idx in top_n_recommendations[user_idx]:
+                movie_title = u_item.iloc[item_idx]['title']
+                f.write(f"- {movie_title}\n")
+            f.write("\n")
 
     # Print top 5 recommendations for User 
     print_recommendations(top_n_recommendations, u_item, user_idx=208)  

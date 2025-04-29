@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Movie Recommendations Viewer</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f8fafc 0%, #e0f7fa 100%);
+      margin: 0;
+      padding: 40px 20px;
+      min-height: 100vh;
+      color: #334155;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      color: #0f172a;
+      font-size: 2.8rem;
+      margin-bottom: 40px;
+      font-weight: 700;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+      position: relative;
+      padding-bottom: 15px;
+    }
+
+    h1:after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 4px;
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+      border-radius: 2px;
+    }
+
+    .file-input-container {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .file-input-label {
+      display: inline-block;
+      padding: 14px 24px;
+      background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+      color: white;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .file-input-label:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(59, 130, 246, 0.4);
+    }
+
+    .file-input-label:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 5px rgba(59, 130, 246, 0.3);
+    }
+
+    input[type="file"] {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+
+    .file-name {
+      margin-top: 10px;
+      font-size: 0.9rem;
+      color: #64748b;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 25px;
+    }
+
+    .card {
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 25px;
+      border-radius: 16px;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border-left: 8px solid #3b82f6;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 100%);
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .card::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 150px;
+      height: 150px;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0) 70%);
+      z-index: -1;
+      opacity: 0;
+      transition: all 0.5s ease;
+      transform: translate(50%, 50%);
+      border-radius: 50%;
+    }
+
+    .card:hover {
+      transform: translateY(-12px) scale(1.03);
+      box-shadow: 0 25px 30px -8px rgba(0, 0, 0, 0.15), 0 12px 15px -5px rgba(0, 0, 0, 0.07);
+      border-left-width: 12px;
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+    
+    .card:hover::after {
+      opacity: 1;
+      transform: translate(30%, 30%) scale(1.2);
+    }
+
+    .user-title {
+      font-weight: 700;
+      font-size: 1.3rem;
+      margin-bottom: 16px;
+      color: #111827;
+      display: flex;
+      align-items: center;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .user-title::before {
+      content: '🎬';
+      margin-right: 8px;
+      font-size: 1.4rem;
+      transition: all 0.3s ease;
+    }
+    
+    .card:hover .user-title {
+      transform: translateY(-2px);
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .card:hover .user-title::before {
+      transform: scale(1.2) rotate(10deg);
+    }
+
+    .movies-list {
+      padding-left: 20px;
+      margin: 0;
+      list-style-type: none;
+    }
+
+    .movie-item {
+      margin-bottom: 12px;
+      color: #374151;
+      padding-left: 20px;
+      position: relative;
+      transition: all 0.3s ease;
+      cursor: default;
+    }
+
+    .movie-item::before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      color: inherit;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    .card:hover .movie-item {
+      padding-left: 25px;
+    }
+
+    .movie-item:hover {
+      transform: translateX(5px);
+      color: #3b82f6;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+    
+    .movie-item:hover::before {
+      transform: scale(1.5);
+      color: #3b82f6;
+    }
+
+    .no-file {
+      text-align: center;
+      padding: 40px;
+      color: #64748b;
+      font-size: 1.1rem;
+      font-style: italic;
+    }
+
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+      }
+      
+      h1 {
+        font-size: 2.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Top 5 Movie Recommendations</h1>
+    
+    <div class="file-input-container">
+      <label for="fileInput" class="file-input-label">
+        Upload Recommendations File
+      </label>
+      <input type="file" id="fileInput" accept=".txt" />
+      <div id="fileName" class="file-name"></div>
+    </div>
+
+    <div class="grid" id="recommendationsGrid">
+      <div class="no-file">Upload a file to see your movie recommendations</div>
+    </div>
+  </div>
+
+  <script>
+    const colors = [
+      '#ef4444', '#f97316', '#f59e0b', '#eab308', 
+      '#84cc16', '#10b981', '#06b6d4', '#0ea5e9', 
+      '#3b82f6', '#6366f1', '#8b5cf6', '#a855f7', 
+      '#d946ef', '#ec4899', '#f43f5e'
+    ];
+
+    const fileInput = document.getElementById('fileInput');
+    const fileNameDisplay = document.getElementById('fileName');
+
+    fileInput.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      
+      // Display file name
+      fileNameDisplay.textContent = `Selected file: ${file.name}`;
+      
+      const reader = new FileReader();
+
+      reader.onload = function(evt) {
+        const lines = evt.target.result.split('\n');
+        const grid = document.getElementById('recommendationsGrid');
+        grid.innerHTML = '';
+
+        let currentUser = null;
+        let currentMovies = [];
+
+        function renderBlock() {
+          if (!currentUser) return;
+
+          const card = document.createElement('div');
+          card.className = 'card';
+          
+          // Assign a random color from our palette
+          const randomColor = colors[Math.floor(Math.random() * colors.length)];
+          card.style.borderLeftColor = randomColor;
+          
+          // Add color-coded glow effect on hover
+          card.addEventListener('mouseenter', () => {
+            card.style.boxShadow = `0 25px 30px -8px rgba(0, 0, 0, 0.15), 0 12px 15px -5px rgba(0, 0, 0, 0.07), 0 0 15px 2px ${randomColor}30`;
+          });
+          
+          card.addEventListener('mouseleave', () => {
+            card.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)';
+          });
+
+          const title = document.createElement('div');
+          title.className = 'user-title';
+          title.textContent = `User ${currentUser}`;
+          card.appendChild(title);
+
+          const ul = document.createElement('ul');
+          ul.className = 'movies-list';
+          
+          currentMovies.forEach((movie, index) => {
+            const li = document.createElement('li');
+            li.className = 'movie-item';
+            li.textContent = movie;
+            li.style.transitionDelay = `${index * 0.05}s`;
+            ul.appendChild(li);
+          });
+
+          card.appendChild(ul);
+          
+          // Add animation delay for staggered appearance
+          const delay = document.querySelectorAll('.card').length * 0.1;
+          card.style.animationDelay = `${delay}s`;
+          
+          grid.appendChild(card);
+        }
+
+        lines.forEach(raw => {
+          const line = raw.trim();
+          if (line.startsWith('Top 5 Recommendations for User')) {
+            if (currentUser) {
+              renderBlock();
+            }
+            const match = line.match(/User\s+(\d+)/);
+            currentUser = match ? match[1] : line;
+            currentMovies = [];
+          } else if (line.startsWith('-')) {
+            currentMovies.push(line.replace(/^-+\s*/, ''));
+          }
+        });
+        
+        // Render the last block
+        renderBlock();
+        
+        // Add animation class to cards after they're all created
+        setTimeout(() => {
+          document.querySelectorAll('.card').forEach(card => {
+            card.style.opacity = 1;
+            card.style.transform = 'translateY(0)';
+          });
+        }, 100);
+      };
+
+      reader.readAsText(file);
+    });
+  </script>
+
+</body>
+</html>

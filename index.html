@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Movie Recommendations Viewer</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #f8fafc, #e0f7fa);
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    h1 {
+      text-align: center;
+      color: #0f172a;
+      font-size: 2.5rem;
+      margin-bottom: 30px;
+    }
+
+    input[type="file"] {
+      display: block;
+      margin: 0 auto 30px auto;
+      padding: 10px;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      cursor: pointer;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border-left: 8px solid #3b82f6;
+    }
+
+    .card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .user-title {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-bottom: 12px;
+      color: #111827;
+    }
+
+    ul {
+      padding-left: 20px;
+      margin: 0;
+    }
+
+    li {
+      margin-bottom: 6px;
+      color: #374151;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Top 5 Movie Recommendations</h1>
+  <input type="file" id="fileInput" accept=".txt" />
+
+  <div class="grid" id="recommendationsGrid"></div>
+
+  <script>
+    const colors = [
+      '#fca5a5', '#fdba74', '#fcd34d', '#bef264',
+      '#6ee7b7', '#5eead4', '#93c5fd', '#c4b5fd', '#f9a8d4'
+    ];
+
+    document.getElementById('fileInput').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+
+      reader.onload = function(evt) {
+        const lines = evt.target.result.split('\n');
+        const grid = document.getElementById('recommendationsGrid');
+        grid.innerHTML = '';
+
+        let currentUser = null;
+        let currentMovies = [];
+
+        function renderBlock() {
+          if (!currentUser) return;
+
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.style.borderLeftColor = colors[Math.floor(Math.random() * colors.length)];
+
+          const title = document.createElement('div');
+          title.className = 'user-title';
+          title.textContent = `User ${currentUser}`;
+          card.appendChild(title);
+
+          const ul = document.createElement('ul');
+          currentMovies.forEach(movie => {
+            const li = document.createElement('li');
+            li.textContent = movie;
+            ul.appendChild(li);
+          });
+
+          card.appendChild(ul);
+          grid.appendChild(card);
+        }
+
+        lines.forEach(raw => {
+          const line = raw.trim();
+          if (line.startsWith('Top 5 Recommendations for User')) {
+            renderBlock();
+            const match = line.match(/User\s+(\d+)/);
+            currentUser = match ? match[1] : line;
+            currentMovies = [];
+          } else if (line.startsWith('-')) {
+            currentMovies.push(line.replace(/^-+\s*/, ''));
+          }
+        });
+        renderBlock();
+      };
+
+      reader.readAsText(file);
+    });
+  </script>
+
+</body>
+</html>
