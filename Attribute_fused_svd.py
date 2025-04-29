@@ -125,7 +125,7 @@ if __name__ == '__main__':
     u_item = pd.read_csv('d:/Minor/ml-100k/ml-100k/u.item', sep='|', names=['item', 'title', 'release', 'video', 'imdb'] + list(range(19)), encoding='latin-1')
 
     # Save top 5 recommendations for first 50 users to a text file
-    with open("top_50_recommendations.txt", "w", encoding="utf-8") as f:
+    with open("top_recommendations.txt", "w", encoding="utf-8") as f:
         for user_idx in range(300):
             f.write(f"Top 5 Recommendations for User {user_idx}:\n")
             for item_idx in top_n_recommendations[user_idx]:
